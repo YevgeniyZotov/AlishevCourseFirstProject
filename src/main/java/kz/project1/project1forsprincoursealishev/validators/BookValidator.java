@@ -31,8 +31,8 @@ public class BookValidator implements Validator {
         }
 
         // Проверка для year
-        if (book.getYear() < 1000 || book.getYear() > 2025) {
-            errors.rejectValue("year", "book.year.size", "Year must be between 1000 and 2025");
+        if (book.getYear() < 1800 || book.getYear() > 2025) {
+            errors.rejectValue("year", "book.year.size", "Year must be between 1800 and 2025");
         }
     }
 }

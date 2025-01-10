@@ -22,7 +22,7 @@ public class Book {
     @Column(name = "author", nullable = false)
     private String author;
 
-    @Min(1000)
+    @Min(1800)
     @Max(2025)
     @Column(name = "year", nullable = false)
     private int year;

@@ -1,11 +1,13 @@
 package kz.project1.project1forsprincoursealishev.validators;
 
 import kz.project1.project1forsprincoursealishev.models.Person;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import java.time.LocalDate;
 
+@Component
 public class PersonValidator implements Validator {
     @Override
     public boolean supports(Class<?> clazz) {

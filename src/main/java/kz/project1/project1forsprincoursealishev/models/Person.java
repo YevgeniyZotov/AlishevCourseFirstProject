@@ -2,6 +2,8 @@ package kz.project1.project1forsprincoursealishev.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
