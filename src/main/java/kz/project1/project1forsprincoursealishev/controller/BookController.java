@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +28,12 @@ public class BookController {
         this.bookValidator = bookValidator;
         this.personService = personService;
     }
+
+    // Можно использовать это и не вызывать каждый раз валидатор при помощи bookValidator.validate(book, bindingResult);
+    /*@InitBinder("book")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(bookValidator);
+    }*/
 
     @GetMapping
     public String getAllBooks(Model model) {
@@ -79,7 +86,7 @@ public class BookController {
         return "redirect:/books";
     }
 
-    @PostMapping("/delete/{id}")
+    @PostMapping("/{id}/delete")
     public String deleteBook(@PathVariable("id") long id) {
         bookService.deleteBookById(id);
         return "redirect:/books";
@@ -91,17 +98,18 @@ public class BookController {
 
         if (book != null) {
             model.addAttribute("book", book);
-            return "bookForm";
+            return "bookEditForm";
         } else {
             return "redirect:/books";
         }
     }
 
     @PutMapping("/{id}/edit")
-    public String updateBook(@PathVariable long id,@Valid @ModelAttribute Book book, BindingResult bindingResult) {
+    public String updateBook(@PathVariable long id, @Valid @ModelAttribute Book book, BindingResult bindingResult) {
+        bookValidator.validate(book, bindingResult);
         book.setId(id);
 
-        if (bindingResult.hasErrors()) return "bookForm";
+        if (bindingResult.hasErrors()) return "bookEditForm";
 
         bookService.saveBook(book, bindingResult);
 
