@@ -5,6 +5,7 @@ import kz.project1.project1forsprincoursealishev.repositories.PersonRepository;
 import kz.project1.project1forsprincoursealishev.validators.PersonValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public List<Person> getAllPersons() {
+    public List<Person> getAllPeople() {
         return personRepository.findAll();
     }
 
@@ -42,5 +43,12 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public void deleteBookById(Long id) {
         personRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Person getPersonWithBooks(Long id) {
+        return personRepository.findByIdWithBooks(id)
+                .orElseThrow(() -> new RuntimeException("Человек с ID " + id + "не найден"));
     }
 }

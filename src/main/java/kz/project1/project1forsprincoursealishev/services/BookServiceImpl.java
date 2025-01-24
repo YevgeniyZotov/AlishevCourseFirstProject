@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -32,6 +34,7 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     @Override
     public void saveBook(Book book, BindingResult bindingResult) {
         bookValidator.validate(book, bindingResult);
@@ -60,6 +63,16 @@ public class BookServiceImpl implements BookService {
             bookRepository.save(updatedBook);
         } else {
             throw new RuntimeException("Book not found with id: " + book.getId());
+        }
+    }
+
+    @Override
+    public void releaseBook(Long id) {
+        Optional<Book> bookOptional = bookRepository.findById(id);
+        if (bookOptional.isPresent()) {
+            Book book = bookOptional.get();
+            book.setPerson(null);
+            bookRepository.save(book);
         }
     }
 }

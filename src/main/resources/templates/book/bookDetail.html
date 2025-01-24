@@ -11,10 +11,10 @@
 <div th:if="${book.getPerson() == null}">
     <p>Эта книга свободна. Кому назначить её?</p>
     <form method="POST" th:action="@{/books/{id}(id=${book.id})}" th:object="${book}">
-        <label for="person">Выберите человека: </label>
-        <select th:field="*{person}" id="person">
+        <label for="people">Выберите человека: </label>
+        <select th:field="*{person}" id="people">
             <option value="" th:text="'Выберите человека'">Выберите человека</option>
-            <option th:each="person : ${persons}" th:value="${person.id}" th:text="${person.fullName}"></option>
+            <option th:each="person : ${people}" th:value="${person.id}" th:text="${person.fullName}"></option>
         </select>
         <input type="submit" value="Назначить книгу">
     </form>

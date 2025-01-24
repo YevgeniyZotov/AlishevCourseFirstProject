@@ -7,8 +7,14 @@ import java.util.List;
 
 public interface BookService {
     List<Book> getAllBooks();
+
     Book getBookById(Long id);
+
     void saveBook(Book book, BindingResult bindingResult);
+
     void deleteBookById(Long id);
+
     void updateBook(Book book);
+
+    void releaseBook(Long id);
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -24,6 +25,9 @@ public class Person {
     @Column(name = "birth_year", nullable = false)
     private int birthYear;
 
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Book> books;
+
     public Person() {
     }
 
@@ -31,6 +35,14 @@ public class Person {
         this.id = id;
         this.fullName = fullName;
         this.birthYear = birthYear;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     public int getId() {

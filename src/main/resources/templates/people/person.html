@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Информация о человеке</title>
+</head>
+<body>
+<h1>Информация о человеке</h1>
+<p>Имя: <span th:text="${person.fullName}"></span></p>
+<p>Год рождения: <span th:text="${person.birthYear}"></span></p>
+
+<h2>Книги</h2>
+<ul th:if="${books.size() > 0}">
+  <li th:each="book : ${books}">
+    <span th:text="${book.title}"></span> -
+    <span th:text="${book.author}"></span>
+    (<span th:text="${book.year}"></span>)
+  </li>
+</ul>
+<p th:if="${books.size() == 0}">Человек не взял ни одной книги.</p>
+
+<a href="/people">Вернуться к списку людей</a>
+</body>
+</html>

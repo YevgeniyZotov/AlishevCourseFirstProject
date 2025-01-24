@@ -25,7 +25,7 @@ public class PersonValidator implements Validator {
 
         // Проверка года рождения
         int currentYear = LocalDate.now().getYear();
-        if (person.getId() < 1900 || person.getBirthYear() > currentYear) {
+        if (person.getBirthYear() < 1900 || person.getBirthYear() > currentYear) {
             errors.rejectValue("birthYear", "person.birthYear.invalid", "Birth year should be between 1900 and the current year");
         }
     }
