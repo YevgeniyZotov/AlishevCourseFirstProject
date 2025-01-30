@@ -1,41 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Book Library</title>
+    <title>Информация о книге</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
 </head>
 <body>
 
-<p th:text="${book.getTitle()} + ', ' + ${book.getAuthor()} + ', ' + ${book.getYear()}"></p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/books}">Моя Библиотека</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Переключить навигацию">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/books}">Книги</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/people}">Люди</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-<div th:if="${book.getPerson() == null}">
-    <p>Эта книга свободна. Кому назначить её?</p>
-    <form method="POST" th:action="@{/books/{id}(id=${book.id})}" th:object="${book}">
-        <label for="people">Выберите человека: </label>
-        <select th:field="*{person}" id="people">
-            <option value="" th:text="'Выберите человека'">Выберите человека</option>
-            <option th:each="person : ${people}" th:value="${person.id}" th:text="${person.fullName}"></option>
-        </select>
-        <input type="submit" value="Назначить книгу">
-    </form>
+<div class="container mt-4">
+    <h1 th:text="${book.title}">Название книги</h1>
+    <p>
+        <strong>Автор:</strong>
+        <span th:text="${book.author}">Автор</span>
+    </p>
+    <p>
+        <strong>Год:</strong>
+        <span th:text="${book.year}">Год</span>
+    </p>
+
+    <div th:if="${book.person == null}">
+        <div class="alert alert-info" role="alert">
+            Эта книга свободна. Кому назначить её?
+        </div>
+        <form method="POST" th:action="@{/books/{id}(id=${book.id})}">
+            <div class="mb-3">
+                <label for="people" class="form-label">Выберите человека:</label>
+                <select class="form-select" id="people" name="person">
+                    <option value="" disabled selected>Выберите человека</option>
+                    <option th:each="p : ${people}"
+                            th:value="${p.id}"
+                            th:text="${p.fullName}"></option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Назначить книгу</button>
+        </form>
+    </div>
+
+    <div th:if="${book.person != null}">
+        <div class="alert alert-success" role="alert">
+            Книга сейчас у:
+            <strong th:text="${book.person.getFullName()}"></strong>
+        </div>
+        <form method="POST" th:action="@{/books/release/{id}(id=${book.id})}">
+            <button type="submit" class="btn btn-warning">Освободить книгу</button>
+        </form>
+    </div>
+
+    <hr class="my-4"/>
+
+    <div class="d-flex gap-2">
+        <form th:action="@{/books/{id}/edit(id=${book.id})}" method="get">
+            <button type="submit" class="btn btn-secondary">Редактировать</button>
+        </form>
+
+        <form th:action="@{/books/{id}/delete(id=${book.id})}" method="post">
+            <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+    </div>
+
+    <hr class="my-4"/>
+    <a class="btn btn-link" th:href="@{/books}">&larr; Вернуться к списку книг</a>
 </div>
 
-<div th:if="${book.getPerson() != null}">
-    <p>Книга сейчас у: <span th:text="${book.person.getFullName()}"></span></p>
-    <form method="POST" th:action="@{/books/release/{id}(id=${book.id})}">
-        <input type="submit" value="Освободить книгу"/>
-    </form>
-</div>
-
-<hr/>
-
-<form th:action="@{/books/{id}/edit(id=${book.id})}" method="get">
-    <button type="submit">Редактировать!</button>
-</form>
-
-<form th:action="@{/books/{id}/delete(id=${book.id})}" method="post">
-    <button type="submit">Удалить</button>
-</form>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+

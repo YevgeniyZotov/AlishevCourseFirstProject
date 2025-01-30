@@ -1,26 +1,50 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>New book</title>
+    <title>Добавить книгу</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
 </head>
 <body>
 
-<form method="POST" th:action="@{/books/new}" th:object="${book}">
-    <label for="title">Title:</label>
-    <input type="text" th:field="*{title}" id="title">
-    <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Name Error</div>
-    <br/>
-    <label for="author">Author:</label>
-    <input type="text" th:field="*{author}" id="author">
-    <div style="color:red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Name Error</div>
-    <br/>
-    <label for="year">Year:</label>
-    <input type="text" th:field="*{year}" id="year">
-    <div style="color:red" th:if="${#fields.hasErrors('year')}" th:errors="*{year}">Name Error</div>
-    <br/>
-    <input type="submit" value="Create!">
-</form>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/books}">Моя Библиотека</a>
+        ...
+    </div>
+</nav>
 
+<div class="container mt-4">
+    <h1>Новая книга</h1>
+
+    <form method="POST" th:action="@{/books/new}" th:object="${book}">
+        <div class="mb-3">
+            <label for="title" class="form-label">Название:</label>
+            <input type="text" th:field="*{title}" id="title" class="form-control">
+            <div class="text-danger" th:if="${#fields.hasErrors('title')}"
+                 th:errors="*{title}">Ошибка названия</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="author" class="form-label">Автор:</label>
+            <input type="text" th:field="*{author}" id="author" class="form-control">
+            <div class="text-danger" th:if="${#fields.hasErrors('author')}"
+                 th:errors="*{author}">Ошибка автора</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="year" class="form-label">Год:</label>
+            <input type="text" th:field="*{year}" id="year" class="form-control">
+            <div class="text-danger" th:if="${#fields.hasErrors('year')}"
+                 th:errors="*{year}">Ошибка года</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Создать</button>
+        <a class="btn btn-secondary" th:href="@{/books}">Отмена</a>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

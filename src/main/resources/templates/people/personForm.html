@@ -1,23 +1,43 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>New person</title>
+  <title>Добавить нового человека</title>
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
 </head>
 <body>
 
-<form method="POST" th:action="@{/people/new}" th:object="${person}">
-  <label for="fullname">Fullname</label>
-  <input type="text" th:field="*{fullName}" id="fullname">
-  <div style="color:red" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}">Name Error</div>
-  <br/>
-  <label for="birthyear">Birthyear:</label>
-  <input type="text" th:field="*{birthYear}" id="birthyear">
-  <div style="color:red" th:if="${#fields.hasErrors('birthYear')}" th:errors="*{birthYear}">Name Error</div>
-  <br/>
-  <hr/>
-  <input type="submit" value="Create!">
-</form>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" th:href="@{/books}">Моя Библиотека</a>
+    ...
+  </div>
+</nav>
 
+<div class="container mt-4">
+  <h1>Новый человек</h1>
+
+  <form method="POST" th:action="@{/people/new}" th:object="${person}">
+    <div class="mb-3">
+      <label for="fullname" class="form-label">ФИО:</label>
+      <input type="text" th:field="*{fullName}" id="fullname" class="form-control"/>
+      <div class="text-danger" th:if="${#fields.hasErrors('fullName')}"
+           th:errors="*{fullName}">Ошибка ФИО</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="birthyear" class="form-label">Год рождения:</label>
+      <input type="text" th:field="*{birthYear}" id="birthyear" class="form-control"/>
+      <div class="text-danger" th:if="${#fields.hasErrors('birthYear')}"
+           th:errors="*{birthYear}">Ошибка года</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Создать</button>
+    <a class="btn btn-secondary" th:href="@{/people}">Отмена</a>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
