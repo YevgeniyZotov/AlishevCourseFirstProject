@@ -2,6 +2,9 @@ package kz.project1.project1forsprincoursealishev.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Entity
@@ -28,8 +31,11 @@ public class Book {
     private int year;
 
     @ManyToOne
-    @JoinColumn(name = "person_id", nullable = true) // НЕ ЗАБЫТЬ УБРАТЬ nullable на false
+    @JoinColumn(name = "person_id")
     private Person person;
+
+    @Column(name = "taken_at")
+    private LocalDateTime takenAt;
 
     public Book() {
     }
@@ -40,6 +46,12 @@ public class Book {
         this.author = author;
         this.year = year;
         this.person = person;
+    }
+
+    @Transient
+    public Boolean getIsOverdue() {
+        if (takenAt == null) return false;
+        return ChronoUnit.DAYS.between(takenAt, LocalDateTime.now()) > 10;
     }
 
     public long getId() {
@@ -80,6 +92,14 @@ public class Book {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public LocalDateTime getTakenAt() {
+        return takenAt;
+    }
+
+    public void setTakenAt(LocalDateTime takenAt) {
+        this.takenAt = takenAt;
     }
 
     @Override

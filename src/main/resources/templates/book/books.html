@@ -35,12 +35,51 @@
 <div class="container mt-4">
     <h1 class="mb-4">Список книг</h1>
 
+    <!-- Форма для выбора количества книг на странице -->
+    <form method="get" action="#" th:action="@{/books}" class="mb-3">
+        <label for="booksPerPage">Книг на странице:</label>
+        <select name="booksPerPage" id="booksPerPage" class="form-select d-inline w-auto">
+            <option value="3" th:selected="${booksPerPage == 3}">3</option>
+            <option value="5" th:selected="${booksPerPage == 5}">5</option>
+            <option value="10" th:selected="${booksPerPage == 10}">10</option>
+        </select>
+
+        <label for="sortByYear" class="me-2">Сортировать по году:</label>
+        <select name="sortByYear" id="sortByYear" class="form-select w-auto me-2">
+            <option value="false" th:selected="${!sortByYear}">Без сортировки</option>
+            <option value="true" th:selected="${sortByYear}">По возрастанию</option>
+        </select>
+
+        <input type="hidden" name="page" value="0"/> <!-- При изменении количества книг всегда начинаем с 1-й страницы -->
+        <button type="submit" class="btn btn-primary">Применить</button>
+    </form>
+
+    <!-- Список книг -->
     <div class="list-group">
         <a th:each="book : ${books}"
            class="list-group-item list-group-item-action"
            th:href="@{/books/{id}(id=${book.getId()})}"
            th:text="${book.getTitle()} + ', ' + ${book.getAuthor()} + ', ' + ${book.getYear()}">
             Книга
+        </a>
+    </div>
+
+    <hr class="my-4"/>
+
+    <!-- Кнопки пагинации -->
+    <div class="d-flex justify-content-between">
+        <a class="btn btn-secondary"
+           th:if="${currentPage > 0}"
+           th:href="@{/books(page=${currentPage - 1}, booksPerPage=${booksPerPage}, sortByYear=${sortByYear})}">
+            Назад
+        </a>
+
+        <span>Страница <span th:text="${currentPage + 1}"></span> из <span th:text="${totalPages}"></span></span>
+
+        <a class="btn btn-secondary"
+           th:if="${currentPage + 1 < totalPages}"
+           th:href="@{/books(page=${currentPage + 1}, booksPerPage=${booksPerPage}, sortByYear=${sortByYear})}">
+            Вперед
         </a>
     </div>
 
@@ -53,4 +92,3 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-

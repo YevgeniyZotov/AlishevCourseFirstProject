@@ -41,7 +41,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void deleteBookById(Long id) {
+    public void deletePersonById(Long id) {
         personRepository.deleteById(id);
     }
 
@@ -50,5 +50,15 @@ public class PersonServiceImpl implements PersonService {
     public Person getPersonWithBooks(Long id) {
         return personRepository.findByIdWithBooks(id)
                 .orElseThrow(() -> new RuntimeException("Человек с ID " + id + "не найден"));
+    }
+
+    @Override
+    public void updatePerson(Person person, BindingResult bindingResult) {
+        Person personToUpdate = personRepository.findById(person.getId()).orElse(null);
+        if (personToUpdate != null) {
+            personToUpdate.setFullName(person.getFullName());
+            personToUpdate.setBirthYear(person.getBirthYear());
+            personRepository.save(personToUpdate);
+        }
     }
 }

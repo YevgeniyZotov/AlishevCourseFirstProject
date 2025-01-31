@@ -12,9 +12,11 @@ public interface PersonService {
 
     void savePerson(Person person, BindingResult bindingResult);
 
-    void deleteBookById(Long id);
+    void deletePersonById(Long id);
 
     List<Person> getAllPeople();
 
     Person getPersonWithBooks(Long id);
+
+    void updatePerson(Person person, BindingResult bindingResult);
 }

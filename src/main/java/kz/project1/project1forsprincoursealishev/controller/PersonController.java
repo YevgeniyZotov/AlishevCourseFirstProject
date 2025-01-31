@@ -57,5 +57,33 @@ public class PersonController {
 
         return "redirect:/people";
     }
+
+    @GetMapping("{id}/edit")
+    public String showEditPersonForm(@PathVariable("id") long id, Model model) {
+        Person person = personService.getPersonById(id);
+        if (person == null) {
+            return "redirect:/people";
+        }
+
+        model.addAttribute("person", person);
+        return "people/personEditForm";
+    }
+
+    @PutMapping("{id}/edit")
+    public String updatePerson(@PathVariable long id, @Valid @ModelAttribute Person person, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "people/personEditForm";
+        }
+
+        person.setId(id);
+        personService.savePerson(person, bindingResult);
+        return "redirect:/people/" + id;
+    }
+
+    @PostMapping("{id}/delete")
+    public String deletePerson(@PathVariable long id) {
+        personService.deletePersonById(id);
+        return "redirect:/people";
+    }
 }
 

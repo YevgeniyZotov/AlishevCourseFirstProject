@@ -13,7 +13,7 @@ public class Person {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @NotEmpty
     @Size(min = 2, max = 100)
@@ -25,7 +25,7 @@ public class Person {
     @Column(name = "birth_year", nullable = false)
     private int birthYear;
 
-    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Book> books;
 
     public Person() {
@@ -45,11 +45,11 @@ public class Person {
         this.books = books;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

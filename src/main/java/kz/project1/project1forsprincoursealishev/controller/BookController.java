@@ -8,12 +8,17 @@ import kz.project1.project1forsprincoursealishev.services.BookService;
 import kz.project1.project1forsprincoursealishev.services.PersonService;
 import kz.project1.project1forsprincoursealishev.validators.BookValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -32,15 +37,25 @@ public class BookController {
         this.bookRepository = bookRepository;
     }
 
-    // Можно использовать это и не вызывать каждый раз валидатор при помощи bookValidator.validate(book, bindingResult);
     @InitBinder("book")
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(bookValidator);
     }
 
     @GetMapping
-    public String getAllBooks(Model model) {
-        model.addAttribute("books", bookService.getAllBooks());
+    public String getAllBooks(@RequestParam(defaultValue = "0") int page,
+                              @RequestParam(defaultValue = "5") int booksPerPage,
+                              @RequestParam(defaultValue = "false") boolean sortByYear,
+                              Model model) {
+        Sort sort = sortByYear ? Sort.by("year").ascending() : Sort.unsorted();
+        Pageable pageable = PageRequest.of(page, booksPerPage, sort);
+        Page<Book> bookPage = bookService.getAllBooks(pageable);
+
+        model.addAttribute("books", bookPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", bookPage.getTotalPages());
+        model.addAttribute("booksPerPage", booksPerPage);
+        model.addAttribute("sortByYear", sortByYear);
         return "book/books";
     }
 
@@ -71,8 +86,12 @@ public class BookController {
             throw new IllegalArgumentException("Person with ID " + personId + " not found");
         }
 
-        // Присваиваем книгу человеку
         book.setPerson(person);
+
+        if (book.getTakenAt() == null) {
+            book.setTakenAt(LocalDateTime.now());
+        }
+
         bookRepository.save(book);
 
         return "redirect:/books/{id}";
@@ -130,5 +149,14 @@ public class BookController {
         bookService.releaseBook(id);
 
         return "redirect:/books";
+    }
+
+    @GetMapping("/search")
+    public String searchBooks(@RequestParam(name = "query", required = false) String query, Model model) {
+        List<Book> books = (query != null && !query.isEmpty()) ? bookService.searchBookByTitle(query) : List.of();
+        model.addAttribute("books", books);
+        model.addAttribute("query", query);
+        model.addAttribute("isEmpty", books.isEmpty());
+        return "book/search";
     }
 }
